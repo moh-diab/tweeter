@@ -1,0 +1,10 @@
+header {
+  height: 400px;
+  width: 100vw;
+  background-color: bisque ;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: url("../images/cubes.png");
+}

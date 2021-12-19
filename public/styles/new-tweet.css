@@ -1,0 +1,28 @@
+.new-tweet {
+  margin-top: 20px;
+}
+#tweet-text {
+  margin-top: 5px;
+  width: 100%;
+  height: 20%;
+  background-color: #f4f1ec;
+  border: none;
+}
+
+.tweetBtn {
+  font-family: 'Bungee', cursive;
+  background-color: #4056A1;
+  color: #ffffff;
+}
+
+.tweetFooter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; 
+}
+
+#tweet-text {
+  border-bottom: 3px solid black;
+  outline: none;
+  height: 35px;
+}
