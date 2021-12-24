@@ -11,7 +11,7 @@ let date_diff_indays = function (date1, date2) {
 }
 
 const createTweetElement = function (tweet) {
-  let $tweet =
+  const $tweet =
     `
   <article class="tweet">
       <header>
@@ -41,39 +41,37 @@ const createTweetElement = function (tweet) {
   return $tweet;
 };
 
-const renderTweets = function(tweets) {
+const renderTweets = function (tweets) {
   for (tweet of tweets) {
     let $tweet = createTweetElement(tweet);
-    $(document).ready(() => {
-      $('.container').append($tweet);
-      });
+    $('.container').append($tweet);
   }
 }
 
-const data = [
-  {
-    "user": {
-      "name": "Newton",
-      "avatars": "https://i.imgur.com/73hZDYK.png"
-      ,
-      "handle": "@SirIsaac"
-    },
-    "content": {
-      "text": "If I have seen further it is by standing on the shoulders of giants"
-    },
-    "created_at": 1461116232227
-  },
-  {
-    "user": {
-      "name": "Descartes",
-      "avatars": "https://i.imgur.com/nlhLi3I.png",
-      "handle": "@rd" },
-    "content": {
-      "text": "Je pense , donc je suis"
-    },
-    "created_at": 1461113959088
-  }
-]
+$(document).ready(function () {
+  $('.submit-tweet').on('submit', function (event) {
+    event.preventDefault();
+    const data = $(this).serialize().slice(5);;
+    // check if the tweet text is null or exceeds the character limits
+    if (data === "" || data === null) {
+      alert("Error: Empty tweets cannot not be posted!");
+      return false;
+    } else if (data.length > 140) {
+      alert("Error: Your tweet cannot be posted because it exceeds the 140 character limit!\n");
+      $('#tweet-text').val('');
+      return false;
+    }
+    $.post('/tweets', $(this).serialize(), function () {
+      console.log("success");
+    })
+  });
+  loadTweets()
+});
 
-
-renderTweets(data);
+let loadTweets = function () {
+  $.get("/tweets", function (data) {
+    $(document).ready(() => {
+      renderTweets(data);
+    });
+  }, "json");
+}
