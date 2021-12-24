@@ -1,5 +1,6 @@
+
 $(document).ready(function() {
-  $("#tweet-text").on('keyup', function() {
+  $("#tweet-text").on('change keyup paste', function() {
     const counter = $(this).next().children()[1];
 
     counter.value = 140 - $(this).val().length;
