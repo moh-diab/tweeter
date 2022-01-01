@@ -19,9 +19,9 @@ This repository is the starter code for the project: Students will fork and clon
 
 ## Screenshots
 
-!["Sreenshot of desktop view"]()<br/>
+!["Sreenshot of desktop view"](https://github.com/moh-diab/tweeter/blob/f44d080afd195d4e1989de736d49bea06a57e63b/docs/Desktop%20view.PNG?raw=true)<br/>
 
-!["Sreenshot of tablet view"]()<br/>
+!["Sreenshot of tablet view"](https://github.com/moh-diab/tweeter/blob/f44d080afd195d4e1989de736d49bea06a57e63b/docs/Tablet%20view.PNG?raw=true)<br/>
 
-!["Error message when posting empty tweeter"]()<br/>
+!["Error message when posting empty tweeter"](https://github.com/moh-diab/tweeter/blob/f44d080afd195d4e1989de736d49bea06a57e63b/docs/Error%20empty%20tweet.PNG?raw=true)<br/>
 
