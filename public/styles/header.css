@@ -1,6 +1,6 @@
-#main-header {
+.main-header {
   height: 400px;
-  width: 100vw;
+  width: 100%;
   background-color: rgb(220, 230, 231) ;
   display: flex;
   flex-direction: column;
@@ -10,12 +10,14 @@
   margin-top: 120px;
 }
 
-header#main-header .name {
+header.main-header .name {
   color: white;
   font-weight: bold;
 }
 
-header#main-header .last-name {
+header.main-header .last-name {
   color: white;
   font-weight: normal;
 }
+
+
