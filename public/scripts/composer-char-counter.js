@@ -1,13 +1,15 @@
 $(document).ready(function () {
-  // --- our code goes here ---
-  $(".new-tweet").on("keydown", "#tweet-text", function () {
-    let $tweetChar = $(this).val().length;
-    let $charCounter = 140 - $tweetChar;
-    let $updatedCounter = $(".counter").text($charCounter);
-    if ($charCounter < 0) {
-      $updatedCounter.addClass("red-flag");
+  $("#tweet-text").on('change keyup paste', function () {
+    // obtain the counter
+    const counter = $(this).next().children()[1];
+
+    //calculate the length of the tweet
+    counter.value = 140 - $(this).val().length;
+
+    if (counter.value < 0) {
+      $(counter).css("color", "red");
     } else {
-      $updatedCounter.removeClass("red-flag");
+      $(counter).css("color", "#545149");
     }
   });
 });
