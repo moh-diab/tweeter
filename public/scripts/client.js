@@ -3,104 +3,83 @@
  * jQuery is already loaded
  * Reminder: Use (and do all your DOM work in) jQuery's document ready function
  */
-
-// calculates date difference between two dates
-let date_diff_indays = function (date1, date2) {
-  dt1 = new Date(date1);
-  dt2 = new Date(date2);
-  return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate())) / (1000 * 60 * 60 * 24));
-}
-
-const createTweetElement = function (tweet) {
-  const $tweet =
-    `
-  <article class="tweet">
-      <header>
-        <div class="left">
-          <img class="profile-picture" src="${tweet.user.avatars}" alt="Profile Picture">
-          <div>${tweet.user.name}</div>
-        </div>
-        <span class="handle">
-          ${tweet.user.handle}
-        </span>
-      </header>
-      ${($(`<div class="content">`).text(tweet.content.text)).prop('outerHTML')}
-      <footer>
-        <div>
-          ${date_diff_indays(tweet.created_at, Date.now())} days ago
-        </div>
-        <div class="icons">
-          <i class="fa fa-flag"></i>
-          <i class="fa fa-retweet"></i>
-          <i class="fa fa-heart"></i>
-        </div>
-      </footer>
-    </article>
-    `;
-  return $tweet;
+// Preventing XSS with Escaping
+const escape = function (str) {
+  let div = document.createElement("div");
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
 };
 
-// create tweet elements for each tweet and append it to the container
 const renderTweets = function (tweets) {
-  $('article.tweet').remove();
-
-  tweets = tweets.reverse();
-
-  for (tweet of tweets) {
-    let $tweet = createTweetElement(tweet);
-    $('.container').append($tweet);
-  }
+  $("#tweets-container").empty();
+  return tweets.forEach((tweet) => {
+    $("#tweets-container").prepend(createTweetElement(tweet));
+  });
+};
+// Create the tweet and its HTML
+const createTweetElement = function (tweetObject) {
+  let updatedTimeAgo = timeago.format(tweetObject.created_at);
+  const element = `
+        <article class="tweet">
+          <header>
+            <div>
+            <img src=${tweetObject.user.avatars} />
+              <h3>${tweetObject.user.name}</h3>
+            </div>
+            <h4>${tweetObject.user.handle}</h4>
+          </header>
+          <p class="tweet-content">${escape(tweetObject.content.text)}</p>
+          <footer>
+          <span class="need_to_be_rendered" datetime="">${updatedTimeAgo}</span>
+              <span>
+                <i class="fas fa-flag"></i>
+                <i class="fas fa-retweet"></i>
+                <i class="fas fa-heart"></i>
+                <span>1</span>
+              </span>
+          </footer>
+        </article>
+ `;
+  return element;
 };
 
-// read tweets from server and render them
-let loadTweets = function () {
-  $.get("/tweets", function (data) {
-    $(document).ready(() => {
-      renderTweets(data);
-    });
-  }, "json");
-}
+const loadTweets = () => {
+  $.get("/tweets", { method: "GET" }).then((data) => {
+    renderTweets(data);
+  });
+};
 
-$(document).ready(function () {
-  // hiding compose tweet textarea apon rendering
-  $(".new-tweet").hide();
-  // hiding the error division apon rendering
-  $(".error").hide();
-
-  // reading the tweet, if it is not null or it does not exceed character limit, send it to server
-  $('.submit-tweet').on('submit', function (event) {
+$(document).ready(() => {
+  $("#compose").on("submit", function (event) {
     event.preventDefault();
-    // filtering the raw data (removing 'text:')
-    const data = $(this).serialize().slice(5);
-    // checking if the tweet text is null or exceeds the character limits
-    if (data === "" || data === null) {
-      $(".error").show();
-      $(".error-msg").text("Error: Empty tweets cannot not be posted!");
-      return false;
-    } else if (unescape(data).length > 140) {
-      $(".error").show();
-      $(".error-msg").text("Error: This tweet cannot be posted because it exceeds the 140 character limit!\n")
-      $('#tweet-text').val('');
-      return false;
-    }
-    $(".error").hide();
-    $.post('/tweets', $(this).serialize(), function () {
-      loadTweets();
-      $('#tweet-text').val('');
-      $('#tweet-text').change();
-    })
-  });
-
-  // show the compose tweet box if it is hidden and hide it if it is showing
-  $(".compose-btn").on("click", function (event) {
-    if ($(".new-tweet").is(":hidden")) {
-      $(".new-tweet").show('slow', function () {
-        $("#tweet-text").focus();
-      });
+    const tweet = $("#tweet-text").val();
+    if (!tweet) {
+      $(".error-message").slideDown("slow");
+      $(".error-message")
+        .children("i")
+        .attr("class", "fas fa-exclamation-triangle")
+        .text("Your tweet is empty")
+        .addClass("red-flag");
+      return;
+    } else if (tweet.length > 140) {
+      $(".error-message").slideDown("slow");
+      $(".error-message")
+        .children("i")
+        .attr("class", "fas fa-exclamation-triangle")
+        .text(`Your tweet is longer than 140 characters`)
+        .addClass("red-flag");
+      return;
     } else {
-      $(".new-tweet").hide('slow');
+      $.ajax({
+        url: "/tweets",
+        method: "POST",
+        data: { text: tweet },
+      }).then(() => {
+        $("#tweet-text").val("");
+        loadTweets();
+        $(".error-message").slideUp();
+      });
     }
   });
-
   loadTweets();
 });

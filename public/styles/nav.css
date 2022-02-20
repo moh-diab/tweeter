@@ -1,34 +1,33 @@
-nav {
+#nav-bar {
+  height: 120;
+  width: 100%;
+  background-color: transparent;
+  color: #ffffff;
+  padding-right: 1.5em;
+  padding-left: 1.5em;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  height: 120px;
-  background-color: #4056A1;
-  color: #ffffff;
-  padding: 1.5em;
-  width: 100%;
-  position:fixed; /* Set the navbar to fixed position */
-  top:0; /* Position the navbar at the top of the page */
+  align-items: center;
+  padding-bottom: 1em;
+  padding-top: 1em;
+  align-content: center;
+  position: fixed;
+  z-index: 10;
 }
 
-nav .title{
-  font-family: 'Bungee', cursive;
-  font-size: 35px;
+#nav-bar > span {
+  font-family: "Bungee", cursive;
 }
 
-.compose-btn {
-  background-color: Transparent;
-  color: #ffffff;
-  border: none;
-}
-
-.compose-btn:focus {
-  outline:0;
-}
-
-nav .right {
+.wr-tweet {
+  align-self: flex-end;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+.container {
+  width: 90%;
+  margin: auto;
+}
